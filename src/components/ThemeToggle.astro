@@ -76,13 +76,18 @@ import { toggleTheme, initThemeToggle } from '../data/themes.ts';
   }
   .icon {
     grid-area: 1 / 1;
+    transition:
+      transform var(--dur-base) var(--ease-press),
+      opacity var(--dur-base) var(--ease-out);
   }
-  /* 亮色显示月亮（点击切到暗色），暗色显示太阳 */
+  /* 亮色显示月亮（点击切到暗色），暗色显示太阳；切换时旋转交叉淡化 */
   [data-theme='dark'] .icon--sun {
-    display: none;
+    transform: rotate(90deg) scale(0);
+    opacity: 0;
   }
   [data-theme='light'] .icon--moon,
   :root:not([data-theme]) .icon--moon {
-    display: none;
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
   }
 </style>

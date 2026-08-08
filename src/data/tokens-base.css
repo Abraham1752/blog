@@ -89,6 +89,13 @@ ol {
   --dur-slow: 250ms;
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
 
+  /* 印刷感动效：压印入场 / 揭示 / 微过冲 */
+  --ease-press: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-press: 520ms;
+  --dur-reveal: 420ms;
+  --reveal-offset: 12px;
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
   --z-header: 100;
 
   --max-prose: 68ch;

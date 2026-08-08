@@ -25,7 +25,7 @@ const B = import.meta.env.BASE_URL;
 >
   <h1 class="page-title">标签</h1>
   <p class="page-sub">{tags.length} 个标签</p>
-  <div class="cloud">
+  <div class="cloud" data-reveal style="--reveal-delay: 100ms">
     {tags.map(([tag, count]) => (
       <a class="cloud__item" href={`${B}tags/${tag}/`}>
         <span class="cloud__name">{tag}</span>

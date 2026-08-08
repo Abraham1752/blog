@@ -17,9 +17,17 @@ const date = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit
 const num = String(index + 1).padStart(2, '0');
 ---
 
-<a class="item" href={`${B}blog/${post.id}/`}>
+<a
+  class="item"
+  href={`${B}blog/${post.id}/`}
+  data-reveal
+  style={`--reveal-delay: ${Math.min(index, 4) * 50}ms`}
+>
   <span class="item__num" aria-hidden="true">{num}</span>
-  <span class="item__title">{post.data.title}</span>
+  <span class="item__title">
+    <span class="item__title-text">{post.data.title}</span>
+    <svg class="item__arrow" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg>
+  </span>
   <span class="item__cat">{post.data.category}</span>
   <time class="item__date" datetime={post.data.pubDate.toISOString()}>{date}</time>
 </a>
@@ -54,10 +62,38 @@ const num = String(index + 1).padStart(2, '0');
   .item__title {
     font-size: var(--fs-h3);
     font-weight: 600;
-    transition: color var(--dur-fast) var(--ease-out);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
   }
   .item:hover .item__title {
     color: var(--accent-text);
+    transform: translateX(4px);
+  }
+  .item__title-text {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    transition: background-size var(--dur-base) var(--ease-press);
+  }
+  .item:hover .item__title-text {
+    background-size: 100% 2px;
+  }
+  .item__arrow {
+    flex-shrink: 0;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-press);
+  }
+  .item:hover .item__arrow {
+    opacity: 1;
+    transform: none;
   }
   @media (max-width: 640px) {
     .item {

@@ -26,8 +26,13 @@ const statusClass = project.status === '进行中' ? 'active' : project.status =
 const github = project.links?.github?.trim();
 ---
 
-<article class:list={{ card: true, 'card--large': large }}>
+<article
+  class:list={{ card: true, 'card--large': large }}
+  data-reveal
+  style={`--reveal-delay: ${large ? 0 : 80}ms`}
+>
   <a class="card__link" href={`${B}projects/${project.slug}/`} aria-label={`查看项目 ${project.name}`}>
+    <span class="card__corner" aria-hidden="true"></span>
     <header class="card__head">
       <span class="badge" data-status={statusClass}>{project.status}</span>
       <span class="card__year">{project.started}</span>
@@ -53,6 +58,28 @@ const github = project.links?.github?.trim();
   .card:hover {
     transform: translateY(-2px);
     border-color: var(--card-border-hover);
+  }
+  .card:active {
+    transform: translateY(0);
+  }
+  /* 角标刻度：hover 时左上角竖线由短到长（瑞士坐标感） */
+  .card__corner {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 18px;
+    height: 18px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      transform var(--dur-base) var(--ease-press);
+  }
+  .card:hover .card__corner {
+    opacity: 1;
+    transform: none;
   }
   .card__link {
     display: flex;

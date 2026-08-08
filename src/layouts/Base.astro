@@ -105,6 +105,18 @@ const ld = [
     <meta name="theme-color" content="#F5F3EE" />
     <meta name="color-scheme" content="light dark" />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <script is:inline>
+      /* 动效门卫：默认静态（可访问/SEO 安全），仅当 JS 可用且用户未要求减少动效时开启 */
+      (function () {
+        try {
+          if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          var root = document.documentElement;
+          root.classList.add('anime-on');
+        } catch (e) {
+          /* 忽略 */
+        }
+      })();
+    </script>
   </head>
   <body>
     <Header activePath={Astro.url.pathname} />
@@ -112,6 +124,33 @@ const ld = [
       <slot />
     </main>
     <Footer />
+    <script is:inline>
+      /* 滚动揭示调度：IntersectionObserver，一次性触发（不重复回退） */
+      (function () {
+        var els = document.querySelectorAll('[data-reveal]');
+        if (!els.length) return;
+        if (!('IntersectionObserver' in window) || !document.documentElement.classList.contains('anime-on')) {
+          els.forEach(function (el) {
+            el.classList.add('is-in');
+          });
+          return;
+        }
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+        );
+        els.forEach(function (el) {
+          io.observe(el);
+        });
+      })();
+    </script>
   </body>
 </html>
 
@@ -125,5 +164,67 @@ const ld = [
   /* 阅读层（ink）不需要点阵，纯净纸感 */
   html[data-skin='ink'] body {
     background-image: none;
+  }
+  /* ---------- 滚动揭示：anime-on 时元素预置隐藏，进入视口后显示 ---------- */
+  html.anime-on [data-reveal] {
+    opacity: 0;
+    transform: translateY(var(--reveal-offset));
+    transition:
+      opacity var(--dur-reveal) var(--ease-press) var(--reveal-delay, 0s),
+      transform var(--dur-reveal) var(--ease-press) var(--reveal-delay, 0s);
+  }
+  html.anime-on [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+  html.anime-on [data-reveal]:focus-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.anime-on [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    html.anime-on .page-title,
+    html.anime-on .page-sub,
+    html.anime-on .post-head {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+  /* ---------- 公共入场 keyframes（压印 / 色块弹出 / 淡入上移） ---------- */
+  @keyframes press-in {
+    to { transform: translateY(0); }
+  }
+  @keyframes block-pop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  /* 页面标题 / 副标题统一入场（归档·项目·标签等瑞士页） */
+  html.anime-on .page-title {
+    animation: press-in var(--dur-press) var(--ease-press) backwards;
+  }
+  html.anime-on .page-sub {
+    animation: fade-up var(--dur-reveal) var(--ease-press) 140ms backwards;
+  }
+  /* ink 文章页头：纸感淡入 */
+  html.anime-on .post-head {
+    animation: fade-up var(--dur-reveal) var(--ease-press) backwards;
+  }
+  /* 选区质感 */
+  ::selection {
+    background: var(--lemon);
+    color: var(--lemon-fg);
+  }
+  html[data-skin='ink'] ::selection {
+    background: var(--accent-text);
+    color: var(--bg);
   }
 </style>

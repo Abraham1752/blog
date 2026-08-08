@@ -89,15 +89,34 @@ function isActive(href: string): boolean {
     letter-spacing: var(--ls-mono);
     color: var(--muted);
     border-bottom: 2px solid transparent;
+    position: relative;
     transition: color var(--dur-fast) var(--ease-out);
     white-space: nowrap;
+  }
+  .header__link::after {
+    content: '';
+    position: absolute;
+    left: var(--space-2);
+    right: var(--space-2);
+    bottom: -2px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-press);
   }
   .header__link:hover {
     color: var(--accent-text);
   }
+  .header__link:hover::after {
+    transform: scaleX(1);
+  }
   .header__link--active {
     color: var(--fg);
     border-bottom-color: var(--accent);
+  }
+  .header__link--active::after {
+    display: none;
   }
 
   @media (max-width: 640px) {

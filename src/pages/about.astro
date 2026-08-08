@@ -33,7 +33,7 @@ const tools = ['Python', 'Astro', 'Git', 'Claude', 'VS Code', 'mitmproxy'];
     <p class="hero__sub">写代码 · 造玩具 · 记日志</p>
   </section>
 
-  <section class="prose">
+  <section class="prose" data-reveal>
     <blockquote>
       <p>
         这个站点的初衷很简单：把我用 AI 开发小玩具、小项目的完整历程记录下来——
@@ -53,7 +53,7 @@ const tools = ['Python', 'Astro', 'Git', 'Claude', 'VS Code', 'mitmproxy'];
 
   <section class="section">
     <h2 class="section__title">常用工具</h2>
-    <div class="chips">
+    <div class="chips" data-reveal>
       {tools.map((t) => (
         <TechChip label={t} />
       ))}
@@ -62,7 +62,7 @@ const tools = ['Python', 'Astro', 'Git', 'Claude', 'VS Code', 'mitmproxy'];
 
   <section class="section">
     <h2 class="section__title">联系方式</h2>
-    <ul class="links">
+    <ul class="links" data-reveal>
       <li>
         GitHub：
         <a href="https://github.com/Abraham1752" target="_blank" rel="noopener">@Abraham1752</a>

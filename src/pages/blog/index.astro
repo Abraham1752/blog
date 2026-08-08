@@ -49,7 +49,7 @@ const isFirst = page === 1;
   </p>
 
   {[...byYear.entries()].map(([year, posts]) => (
-    <section class="year">
+    <section class="year" data-reveal>
       <h2 class="year__label">{year}</h2>
       <div class="year__list">
         {posts.map((post, i) => (

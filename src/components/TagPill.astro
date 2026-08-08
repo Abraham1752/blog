@@ -27,10 +27,15 @@ const { label, href } = Astro.props;
     border-radius: 999px;
     transition:
       border-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out);
+      color var(--dur-fast) var(--ease-out),
+      transform var(--dur-base) var(--ease-press);
   }
   a.pill:hover {
     color: var(--accent-text);
     border-color: var(--accent-text);
+    transform: translateY(-1px);
+  }
+  a.pill:active {
+    transform: none;
   }
 </style>

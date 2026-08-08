@@ -9,10 +9,10 @@ const B = import.meta.env.BASE_URL;
 
 <SwissLayout title="404 · Yikino" description="页面不存在。" noindex>
   <section class="nf">
-    <p class="nf__code">404</p>
-    <h1 class="nf__title">页面不存在</h1>
-    <p class="nf__desc">这个地址没有内容——也许链接已失效，或文章还没写。</p>
-    <a class="nf__home" href={B}>← 回首页</a>
+    <p class="nf__code" data-reveal>404</p>
+    <h1 class="nf__title" data-reveal style="--reveal-delay: 80ms">页面不存在</h1>
+    <p class="nf__desc" data-reveal style="--reveal-delay: 160ms">这个地址没有内容——也许链接已失效，或文章还没写。</p>
+    <a class="nf__home" href={B} data-reveal style="--reveal-delay: 240ms">← 回首页</a>
   </section>
 </SwissLayout>
 

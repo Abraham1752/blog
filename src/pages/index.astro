@@ -26,9 +26,12 @@ const B = import.meta.env.BASE_URL;
   title="Yikino · AI 小玩具开发日志"
   description="用 AI 开发小玩具、小项目的完整历程：遇到的问题、使用的工具、得到的经验。个人开发日志与作品集。"
 >
-  <section class="hero">
+  <section class="hero" data-anime="hero">
     <h1 class="hero__title">
-      Yikino<span class="hero__block" aria-hidden="true"></span>
+      <span class="hero__row" aria-label="Yikino">
+        <span class="hero__char" aria-hidden="true">Y</span><span class="hero__char" aria-hidden="true">i</span><span class="hero__char" aria-hidden="true">k</span><span class="hero__char" aria-hidden="true">i</span><span class="hero__char" aria-hidden="true">n</span><span class="hero__char" aria-hidden="true">o</span>
+      </span>
+      <span class="hero__block" aria-hidden="true"></span>
     </h1>
     <p class="hero__sub">AI 小玩具开发日志 · 记录每一次踩坑与发现</p>
     <p class="hero__desc">
@@ -38,7 +41,7 @@ const B = import.meta.env.BASE_URL;
   </section>
 
   <section class="section" aria-labelledby="latest-heading">
-    <h2 class="section__title" id="latest-heading">最新文章</h2>
+    <h2 class="section__title" id="latest-heading" data-reveal>最新文章</h2>
     <div class="latest">
       {posts.length > 0 ? (
         posts.map((post, i) => <ArticleListItem post={post} index={i} />)
@@ -46,25 +49,25 @@ const B = import.meta.env.BASE_URL;
         <p class="empty">第一篇正在路上，敬请期待。</p>
       )}
     </div>
-    <p class="section__more">
+    <p class="section__more" data-reveal>
       <a href={`${B}blog/`}>全部文章 →</a>
     </p>
   </section>
 
   <section class="section" aria-labelledby="projects-heading">
-    <h2 class="section__title" id="projects-heading">项目</h2>
+    <h2 class="section__title" id="projects-heading" data-reveal>项目</h2>
     <div class="bento">
       {projectsData.map((project, i) => (
         <ProjectCard project={project} large={i === 0} />
       ))}
     </div>
-    <p class="section__more">
+    <p class="section__more" data-reveal>
       <a href={`${B}projects/`}>全部项目 →</a>
     </p>
   </section>
 
   <section class="section" aria-labelledby="tags-heading">
-    <h2 class="section__title" id="tags-heading">标签</h2>
+    <h2 class="section__title" id="tags-heading" data-reveal>标签</h2>
     <div class="tags">
       {allTags.length > 0 ? (
         allTags.map((tag) => <TagPill label={tag} href={`${B}tags/${tag}/`} />)
@@ -98,6 +101,50 @@ const B = import.meta.env.BASE_URL;
     height: 0.18em;
     background: var(--lemon);
     align-self: center;
+  }
+  /* ---------- 压印入场（anime-on 时生效；block 作为网格单元参与排版） ---------- */
+  .hero__title {
+    position: relative;
+  }
+  .hero__row {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: baseline;
+  }
+  .hero__char {
+    display: inline-block;
+  }
+  html.anime-on .hero__char {
+    transform: translateY(115%);
+    animation-name: press-in;
+    animation-duration: var(--dur-press);
+    animation-timing-function: var(--ease-press);
+    animation-fill-mode: forwards;
+  }
+  .hero__char:nth-child(1) { animation-delay: 60ms; }
+  .hero__char:nth-child(2) { animation-delay: 100ms; }
+  .hero__char:nth-child(3) { animation-delay: 140ms; }
+  .hero__char:nth-child(4) { animation-delay: 180ms; }
+  .hero__char:nth-child(5) { animation-delay: 220ms; }
+  .hero__char:nth-child(6) { animation-delay: 260ms; }
+  html.anime-on .hero__block {
+    animation: block-pop 360ms var(--ease-pop) 400ms backwards;
+  }
+  html.anime-on .hero__sub {
+    animation: fade-up var(--dur-reveal) var(--ease-press) 480ms backwards;
+  }
+  html.anime-on .hero__desc {
+    animation: fade-up var(--dur-reveal) var(--ease-press) 580ms backwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.anime-on .hero__char,
+    html.anime-on .hero__block,
+    html.anime-on .hero__sub,
+    html.anime-on .hero__desc {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
   }
   .hero__sub {
     font-family: var(--font-mono);

@@ -46,9 +46,9 @@ const jsonLd = [
       </span>
       <span>起于 {project.started}</span>
     </p>
-    <h1 class="proj-head__title">{project.name}</h1>
-    <p class="proj-head__summary">{project.summary}</p>
-    <div class="proj-head__chips">
+    <h1 class="proj-head__title" data-reveal>{project.name}</h1>
+    <p class="proj-head__summary" data-reveal style="--reveal-delay: 80ms">{project.summary}</p>
+    <div class="proj-head__chips" data-reveal style="--reveal-delay: 140ms">
       {project.tech?.map((t) => (
         <TechChip label={t} />
       ))}
