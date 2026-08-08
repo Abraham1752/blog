@@ -25,6 +25,7 @@ pnpm-debug.log*
 
 # local build/debug artifacts
 build.log
+dev.log
 logs/
 # CJK 可变字体源文件（24MB+，不进仓库；子集产物 src/assets/fonts/ 入库）
 scripts/fonts-src/
