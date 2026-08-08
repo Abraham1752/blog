@@ -32,7 +32,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site!);
-const siteName = 'TOYLOG · AI 小玩具开发日志';
+const siteName = 'Yikino · AI 小玩具开发日志';
 
 const ld = [
   {
@@ -92,7 +92,7 @@ const ld = [
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="TOYLOG RSS"
+      title="Yikino RSS"
       href={`${Astro.site}${import.meta.env.BASE_URL}rss.xml`}
     />
     <meta property="og:site_name" content={siteName} />

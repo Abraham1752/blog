@@ -10,7 +10,7 @@ export const GET = async (context: { site: URL }) => {
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
   return rss({
-    title: 'TOYLOG · AI 小玩具开发日志',
+    title: 'Yikino · AI 小玩具开发日志',
     description: '用 AI 开发小玩具、小项目的完整历程：遇到的问题、使用的工具、得到的经验。',
     site: context.site,
     xmlns: { atom: 'http://www.w3.org/2005/Atom' },

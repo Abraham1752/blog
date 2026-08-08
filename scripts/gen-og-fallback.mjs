@@ -18,7 +18,7 @@ const html = `<!doctype html>
 </style></head>
 <body>
   <div class="top">
-    <div class="logo">TOYLOG<span class="block"></span></div>
+    <div class="logo">Yikino<span class="block"></span></div>
     <div class="date">2026-08</div>
   </div>
   <div>
