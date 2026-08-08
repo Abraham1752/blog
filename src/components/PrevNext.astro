@@ -12,7 +12,7 @@ const B = import.meta.env.BASE_URL;
 
 <nav class="prevnext" aria-label="文章导航">
   {prev ? (
-    <a class="prevnext__cell" href={`${B}blog/${prev.id}/`}>
+    <a class="prevnext__cell" href={`${B}blog/${prev.slug}/`}>
       <span class="prevnext__tag">PREV</span>
       <span class="prevnext__title">{prev.title}</span>
     </a>
@@ -20,7 +20,7 @@ const B = import.meta.env.BASE_URL;
     <span class="prevnext__cell prevnext__cell--empty" aria-hidden="true"></span>
   )}
   {next ? (
-    <a class="prevnext__cell prevnext__cell--next" href={`${B}blog/${next.id}/`}>
+    <a class="prevnext__cell prevnext__cell--next" href={`${B}blog/${next.slug}/`}>
       <span class="prevnext__tag">NEXT</span>
       <span class="prevnext__title">{next.title}</span>
     </a>
