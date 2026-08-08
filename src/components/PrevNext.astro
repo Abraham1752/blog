@@ -1,0 +1,76 @@
+---
+/**
+ * PrevNext.astro · 文章底部上下篇导航（mono PREV / NEXT 标签）
+ */
+interface Props {
+  prev?: { slug: string; title: string };
+  next?: { slug: string; title: string };
+}
+const { prev, next } = Astro.props;
+const B = import.meta.env.BASE_URL;
+---
+
+<nav class="prevnext" aria-label="文章导航">
+  {prev ? (
+    <a class="prevnext__cell" href={`${B}blog/${prev.id}/`}>
+      <span class="prevnext__tag">PREV</span>
+      <span class="prevnext__title">{prev.title}</span>
+    </a>
+  ) : (
+    <span class="prevnext__cell prevnext__cell--empty" aria-hidden="true"></span>
+  )}
+  {next ? (
+    <a class="prevnext__cell prevnext__cell--next" href={`${B}blog/${next.id}/`}>
+      <span class="prevnext__tag">NEXT</span>
+      <span class="prevnext__title">{next.title}</span>
+    </a>
+  ) : (
+    <span class="prevnext__cell prevnext__cell--empty" aria-hidden="true"></span>
+  )}
+</nav>
+
+<style>
+  .prevnext {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  .prevnext__cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+  .prevnext__cell:hover {
+    border-color: var(--card-border-hover);
+  }
+  .prevnext__cell--next {
+    text-align: right;
+    align-items: flex-end;
+  }
+  .prevnext__cell--empty {
+    visibility: hidden;
+  }
+  .prevnext__tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: var(--ls-mono);
+    color: var(--accent-text);
+    font-weight: 700;
+  }
+  .prevnext__title {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  @media (max-width: 640px) {
+    .prevnext {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+/**
+ * projects/index.astro · 项目专区：全部项目卡片网格
+ */
+import { getProjects } from '../../lib/projects';
+import SwissLayout from '../../layouts/SwissLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = await getProjects();
+---
+
+<SwissLayout
+  title="项目 · TOYLOG"
+  description="TOYLOG 作品集：用 AI 开发的小玩具与小项目。"
+>
+  <h1 class="page-title">项目</h1>
+  <p class="page-sub">{projects.length} 个项目</p>
+  <div class="grid">
+    {projects.map((project) => (
+      <ProjectCard project={project} />
+    ))}
+  </div>
+</SwissLayout>
+
+<style>
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 800;
+    margin-bottom: var(--space-2);
+  }
+  .page-sub {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--space-6);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-3);
+  }
+  @media (max-width: 560px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

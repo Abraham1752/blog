@@ -1,0 +1,189 @@
+---
+/**
+ * projects/[slug].astro · 项目详情：简介 → 技术栈 → GitHub → 关联文章 → 相关项目
+ */
+import { getCollection } from 'astro:content';
+import { getProjects } from '../../lib/projects';
+import SwissLayout from '../../layouts/SwissLayout.astro';
+import TechChip from '../../components/TechChip.astro';
+import ArticleListItem from '../../components/ArticleListItem.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const slug = project.slug;
+
+const relatedPosts = (await getCollection('posts', ({ data }) => !data.draft && data.projects?.includes(slug!)))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const relatedProjects = (await getProjects()).filter((p) => p.slug !== project.slug).slice(0, 3);
+const github = project.links?.github?.trim();
+
+const B = import.meta.env.BASE_URL;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: project.name,
+    description: project.summary,
+    codeRepository: github || undefined,
+    programmingLanguage: project.tech?.join(', '),
+    author: { '@type': 'Person', name: 'Abraham1752' },
+  },
+];
+---
+
+<SwissLayout title={`${project.name} · 项目 · TOYLOG`} description={project.summary} jsonLd={jsonLd}>
+  <header class="proj-head">
+    <p class="proj-head__meta">
+      <span class="badge" data-status={project.status === '进行中' ? 'active' : project.status === '已完成' ? 'done' : 'archive'}>
+        {project.status}
+      </span>
+      <span>起于 {project.started}</span>
+    </p>
+    <h1 class="proj-head__title">{project.name}</h1>
+    <p class="proj-head__summary">{project.summary}</p>
+    <div class="proj-head__chips">
+      {project.tech?.map((t) => (
+        <TechChip label={t} />
+      ))}
+    </div>
+    {github && (
+      <a class="btn" href={github} target="_blank" rel="noopener">
+        GitHub 仓库 ↗
+      </a>
+    )}
+  </header>
+
+  <section class="section">
+    <h2 class="section__title">相关文章</h2>
+    {relatedPosts.length > 0 ? (
+      <div class="list">
+        {relatedPosts.map((post, i) => (
+          <ArticleListItem post={post} index={i} />
+        ))}
+      </div>
+    ) : (
+      <p class="empty">复盘文章正在撰写中。</p>
+    )}
+  </section>
+
+  {relatedProjects.length > 0 && (
+    <section class="section">
+      <h2 class="section__title">其他项目</h2>
+      <div class="related">
+        {relatedProjects.map((p) => (
+          <ProjectCard project={p} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <p class="back">
+    <a href={`${B}projects/`}>← 全部项目</a>
+  </p>
+</SwissLayout>
+
+<style>
+  .proj-head {
+    padding-bottom: var(--space-5);
+    border-bottom: 2px solid var(--fg);
+    margin-bottom: var(--space-6);
+  }
+  .proj-head__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+    color: var(--muted);
+    margin-bottom: var(--space-3);
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+  }
+  .badge[data-status='active'] {
+    background: var(--badge-active-bg);
+    color: var(--badge-active-fg);
+  }
+  .badge[data-status='done'] {
+    background: var(--badge-done-bg);
+    color: var(--badge-done-fg);
+  }
+  .badge[data-status='archive'] {
+    background: var(--badge-archive-bg);
+    color: var(--badge-archive-fg);
+  }
+  .proj-head__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: var(--space-3);
+  }
+  .proj-head__summary {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    max-width: 56ch;
+    margin-bottom: var(--space-3);
+  }
+  .proj-head__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-4);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--space-4);
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .btn:hover {
+    background: var(--btn-hover-bg);
+  }
+  .section {
+    margin-bottom: var(--space-6);
+  }
+  .section__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 800;
+    margin-bottom: var(--space-3);
+  }
+  .list {
+    border-top: 2px solid var(--fg);
+  }
+  .empty {
+    color: var(--muted);
+    padding: var(--space-3) 0;
+  }
+  .related {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-3);
+  }
+  .back {
+    margin-top: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+  }
+  .back a:hover {
+    color: var(--accent-text);
+  }
+</style>

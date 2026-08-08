@@ -1,0 +1,27 @@
+- name: Majsoul Assist
+  slug: majsoul-assist
+  status: 进行中
+  started: 2026-07
+  summary: 雀魂麻将网络协议的学习性解析工具
+  tech: [Python, mitmproxy, protobuf]
+  links:
+    github: https://github.com/Abraham1752/majsoul-assist
+  posts: []
+- name: Theme Gallery
+  slug: theme-gallery
+  status: 已完成
+  started: 2026-07
+  summary: 8 套 UI 主题的视觉实验画廊
+  tech: [HTML, CSS]
+  links:
+    github: ""
+  posts: []
+- name: 精算就业研究
+  slug: insurance-actuarial-employment
+  status: 进行中
+  started: 2026-07
+  summary: 精算/保险行业就业机会调研与 PPT 自动化工作流
+  tech: [Python, research, PPT]
+  links:
+    github: ""
+  posts: []

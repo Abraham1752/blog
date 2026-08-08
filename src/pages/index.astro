@@ -1,17 +1,186 @@
 ---
+/**
+ * index.astro · 首页：Hero（72px 大字 + 点阵背景 + 柠檬黄高亮）+ 最新文章 + Bento 项目网格 + 标签云
+ */
+import { getCollection } from 'astro:content';
+import { getProjects } from '../lib/projects';
+import SwissLayout from '../layouts/SwissLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ArticleListItem from '../components/ArticleListItem.astro';
+import TagPill from '../components/TagPill.astro';
 
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+
+const projectsData = await getProjects();
+
+const allTags = await getCollection('posts', ({ data }) => !data.draft).then((ps) =>
+  Array.from(new Set(ps.flatMap((p) => p.data.tags))),
+);
+
+const B = import.meta.env.BASE_URL;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<SwissLayout
+  title="TOYLOG · AI 小玩具开发日志"
+  description="用 AI 开发小玩具、小项目的完整历程：遇到的问题、使用的工具、得到的经验。个人开发日志与作品集。"
+>
+  <section class="hero">
+    <h1 class="hero__title">
+      TOYLOG<span class="hero__block" aria-hidden="true"></span>
+    </h1>
+    <p class="hero__sub">AI 小玩具开发日志 · 记录每一次踩坑与发现</p>
+    <p class="hero__desc">
+      这里是 <strong>Abraham1752</strong> 的开发日志：项目复盘、工具测评、教程与周记。
+      用 AI 造小玩具，并把过程写下来——站点本身就是一个作品。
+    </p>
+  </section>
+
+  <section class="section" aria-labelledby="latest-heading">
+    <h2 class="section__title" id="latest-heading">最新文章</h2>
+    <div class="latest">
+      {posts.length > 0 ? (
+        posts.map((post, i) => <ArticleListItem post={post} index={i} />)
+      ) : (
+        <p class="empty">第一篇正在路上，敬请期待。</p>
+      )}
+    </div>
+    <p class="section__more">
+      <a href={`${B}blog/`}>全部文章 →</a>
+    </p>
+  </section>
+
+  <section class="section" aria-labelledby="projects-heading">
+    <h2 class="section__title" id="projects-heading">项目</h2>
+    <div class="bento">
+      {projectsData.map((project, i) => (
+        <ProjectCard project={project} large={i === 0} />
+      ))}
+    </div>
+    <p class="section__more">
+      <a href={`${B}projects/`}>全部项目 →</a>
+    </p>
+  </section>
+
+  <section class="section" aria-labelledby="tags-heading">
+    <h2 class="section__title" id="tags-heading">标签</h2>
+    <div class="tags">
+      {allTags.length > 0 ? (
+        allTags.map((tag) => <TagPill label={tag} href={`${B}tags/${tag}/`} />)
+      ) : (
+        <p class="empty">暂无标签。</p>
+      )}
+    </div>
+  </section>
+</SwissLayout>
+
+<style>
+  .hero {
+    padding: var(--space-5) 0 var(--space-6);
+    border-bottom: 2px solid var(--fg);
+    margin-bottom: var(--space-6);
+  }
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: var(--space-3);
+  }
+  .hero__block {
+    display: inline-block;
+    width: 0.18em;
+    height: 0.18em;
+    background: var(--lemon);
+    align-self: center;
+  }
+  .hero__sub {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--space-3);
+  }
+  .hero__desc {
+    max-width: 56ch;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+  .hero__desc strong {
+    color: var(--accent-text);
+  }
+
+  .section {
+    margin-bottom: var(--space-7);
+  }
+  .section__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 800;
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .section__title::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: var(--lemon);
+  }
+  .section__more {
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+  }
+  .section__more a:hover {
+    color: var(--accent-text);
+  }
+
+  .latest {
+    border-top: 2px solid var(--fg);
+  }
+  .empty {
+    color: var(--muted);
+    padding: var(--space-4) 0;
+  }
+
+  /* Bento：非对称网格，首卡跨双列 */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+  }
+  .bento :global(.card--large) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  @media (max-width: 900px) {
+    .bento {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 560px) {
+    .bento {
+      grid-template-columns: 1fr;
+    }
+    .bento :global(.card--large) {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+</style>

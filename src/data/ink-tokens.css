@@ -1,0 +1,168 @@
+/* ============================================================
+   ink-tokens.css · 皮肤 B：电子墨水（内容层）
+   文章页正文阅读：暖纸/深墨底 + 赭石强调，衬线标题，行高 1.9，68ch
+   ============================================================ */
+
+/* ---------- 亮色 ---------- */
+[data-skin='ink'] {
+  color-scheme: light;
+
+  /* 颜色 */
+  --bg: #f7f2e7;              /* 暖纸 */
+  --fg: #2a2823;              /* 墨色 */
+  --muted: #6d675c;
+  --hairline: rgba(42, 40, 35, 0.16);
+  --grid-dot: rgba(42, 40, 35, 0.04);
+
+  --accent: #a3562a;          /* 赭石 */
+  --accent-text: #a3562a;     /* 5.0:1 AA 正文级 */
+  --accent-bg: #a3562a;
+  --accent-fg: #f7f2e7;
+  --accent-hover-bg: #87431f;
+
+  --lemon: #e8d113;           /* 与 swiss 暗色同义保留（图形级） */
+  --lemon-fg: #2a2823;
+
+  /* 组件 */
+  --header-bg: rgba(247, 242, 231, 0.85);
+  --header-border: rgba(42, 40, 35, 0.35);
+  --card-bg: #f7f2e7;
+  --card-border: rgba(42, 40, 35, 0.5);
+  --card-border-hover: #a3562a;
+  --chip-border: rgba(42, 40, 35, 0.45);
+  --chip-fg: #2a2823;
+  --tag-border: rgba(42, 40, 35, 0.4);
+  --tag-fg: #2a2823;
+  --badge-active-bg: var(--lemon);
+  --badge-active-fg: var(--lemon-fg);
+  --badge-done-bg: var(--accent-bg);
+  --badge-done-fg: var(--accent-fg);
+  --badge-archive-bg: #d8d2c2;
+  --badge-archive-fg: #2a2823;
+  --btn-bg: var(--accent-bg);
+  --btn-fg: var(--accent-fg);
+  --btn-hover-bg: var(--accent-hover-bg);
+  --focus-ring: #a3562a;
+
+  --block-bg: #efe8d9;        /* 代码块/引用底 */
+  --code-border: rgba(42, 40, 35, 0.12);
+  --quote-border: #a3562a;
+
+  /* 排版：标题 Playfair + Noto Serif SC 子集（缺字回退宋体），正文系统字体 */
+  --font-display: var(--fw-playfair-display), var(--fw-cjk-serif), 'Songti SC', 'SimSun', serif;
+  --font-body: var(--fw-source-serif-4), 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', serif;
+  --fs-meta: 13px;
+  --fs-body: 17px;
+  --fs-h3: 22px;
+  --fs-h2: 30px;
+  --fs-h1: 40px;
+  --fs-hero: clamp(36px, 6vw, 56px);
+  --lh-body: 1.9;
+  --lh-heading: 1.4;
+  --ls-mono: 0.1em;
+
+  /* 间距：8px 基准网格（舒展） */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 40px;
+  --space-5: 56px;
+  --space-6: 80px;
+  --space-7: 120px;
+
+  /* 圆角：4px 卡片 / 8px 代码块 */
+  --radius-sm: 4px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-code: 8px;
+}
+
+/* ---------- 暗色（显式手动切换） ---------- */
+[data-skin='ink'][data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #1c1a17;              /* 深墨 */
+  --fg: #d8d2c5;              /* 浅纸色 */
+  --muted: #9a927f;
+  --hairline: rgba(216, 210, 197, 0.15);
+  --grid-dot: rgba(216, 210, 197, 0.05);
+
+  --accent: #c77b4e;          /* 暖赭石（5.2:1 AA） */
+  --accent-text: #c77b4e;
+  --accent-bg: #c77b4e;
+  --accent-fg: #1c1a17;
+  --accent-hover-bg: #d98d61;
+
+  --lemon: #e8d113;
+  --lemon-fg: #1c1a17;
+
+  --header-bg: rgba(28, 26, 23, 0.85);
+  --header-border: rgba(216, 210, 197, 0.18);
+  --card-bg: #1c1a17;
+  --card-border: rgba(216, 210, 197, 0.35);
+  --card-border-hover: #c77b4e;
+  --chip-border: rgba(216, 210, 197, 0.35);
+  --chip-fg: #d8d2c5;
+  --tag-border: rgba(216, 210, 197, 0.3);
+  --tag-fg: #d8d2c5;
+  --badge-active-bg: var(--lemon);
+  --badge-active-fg: var(--lemon-fg);
+  --badge-done-bg: var(--accent-bg);
+  --badge-done-fg: var(--accent-fg);
+  --badge-archive-bg: #35322b;
+  --badge-archive-fg: #d8d2c5;
+  --btn-bg: var(--accent-bg);
+  --btn-fg: var(--accent-fg);
+  --btn-hover-bg: var(--accent-hover-bg);
+  --focus-ring: #c77b4e;
+
+  --block-bg: #262219;
+  --code-border: rgba(216, 210, 197, 0.1);
+  --quote-border: #c77b4e;
+}
+
+/* ---------- 暗色（无 JS 时跟随系统） ---------- */
+@media (prefers-color-scheme: dark) {
+  :root[data-skin='ink']:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --bg: #1c1a17;
+    --fg: #d8d2c5;
+    --muted: #9a927f;
+    --hairline: rgba(216, 210, 197, 0.15);
+    --grid-dot: rgba(216, 210, 197, 0.05);
+
+    --accent: #c77b4e;
+    --accent-text: #c77b4e;
+    --accent-bg: #c77b4e;
+    --accent-fg: #1c1a17;
+    --accent-hover-bg: #d98d61;
+
+    --lemon: #e8d113;
+    --lemon-fg: #1c1a17;
+
+    --header-bg: rgba(28, 26, 23, 0.85);
+    --header-border: rgba(216, 210, 197, 0.18);
+    --card-bg: #1c1a17;
+    --card-border: rgba(216, 210, 197, 0.35);
+    --card-border-hover: #c77b4e;
+    --chip-border: rgba(216, 210, 197, 0.35);
+    --chip-fg: #d8d2c5;
+    --tag-border: rgba(216, 210, 197, 0.3);
+    --tag-fg: #d8d2c5;
+    --badge-active-bg: var(--lemon);
+    --badge-active-fg: var(--lemon-fg);
+    --badge-done-bg: var(--accent-bg);
+    --badge-done-fg: var(--accent-fg);
+    --badge-archive-bg: #35322b;
+    --badge-archive-fg: #d8d2c5;
+    --btn-bg: var(--accent-bg);
+    --btn-fg: var(--accent-fg);
+    --btn-hover-bg: var(--accent-hover-bg);
+    --focus-ring: #c77b4e;
+
+    --block-bg: #262219;
+    --code-border: rgba(216, 210, 197, 0.1);
+    --quote-border: #c77b4e;
+  }
+}

@@ -1,0 +1,116 @@
+---
+/**
+ * Header.astro · sticky 毛玻璃导航 + 主题切换，底边 2px 粗线（瑞士特征）
+ */
+import Wordmark from './Wordmark.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  activePath: string;
+}
+
+const { activePath } = Astro.props;
+const B = import.meta.env.BASE_URL;
+
+const nav = [
+  { href: `${B}`, label: '首页' },
+  { href: `${B}projects/`, label: '项目' },
+  { href: `${B}blog/`, label: '归档' },
+  { href: `${B}tags/`, label: '标签' },
+  { href: `${B}about/`, label: '关于' },
+];
+
+const clean = (p: string) => p.replace(/\/+$/, '') || '/';
+function isActive(href: string): boolean {
+  const current = clean(activePath);
+  const target = clean(href);
+  if (target === '/') return current === '/';
+  return current === target || current.startsWith(target + '/');
+}
+---
+
+<header class="header">
+  <div class="header__inner">
+    <Wordmark />
+    <nav class="header__nav" aria-label="主导航">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class:list={{ 'header__link': true, 'header__link--active': isActive(item.href) }}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--header-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--header-border);
+  }
+  .header__inner {
+    max-width: var(--max-page);
+    margin-inline: auto;
+    padding-inline: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 60px;
+  }
+  .header__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .header__nav::-webkit-scrollbar {
+    display: none;
+  }
+  .header__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    font-size: var(--fs-label);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-mono);
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    transition: color var(--dur-fast) var(--ease-out);
+    white-space: nowrap;
+  }
+  .header__link:hover {
+    color: var(--accent-text);
+  }
+  .header__link--active {
+    color: var(--fg);
+    border-bottom-color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .header__inner {
+      flex-wrap: wrap;
+      min-height: auto;
+      padding-block: var(--space-1);
+    }
+    .header__nav {
+      order: 3;
+      width: 100%;
+      justify-content: space-between;
+      border-top: 1px solid var(--hairline);
+    }
+  }
+</style>

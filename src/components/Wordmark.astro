@@ -1,0 +1,42 @@
+---
+/**
+ * Wordmark.astro · 站点字标：粗黑字 + 柠檬黄方块
+ */
+interface Props {
+  size?: 'sm' | 'lg';
+}
+const { size = 'sm' } = Astro.props;
+const B = import.meta.env.BASE_URL;
+---
+
+<a class={`wordmark wordmark--${size}`} href={B} aria-label="TOYLOG 首页">
+  <span class="wordmark__text">TOYLOG</span>
+  <span class="wordmark__block" aria-hidden="true"></span>
+</a>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+  .wordmark--sm {
+    font-size: 22px;
+  }
+  .wordmark--lg {
+    font-size: var(--fs-hero);
+  }
+  .wordmark__block {
+    display: inline-block;
+    width: 0.62em;
+    height: 0.62em;
+    background: var(--lemon);
+    align-self: center;
+    transform: translateY(0.05em);
+  }
+</style>

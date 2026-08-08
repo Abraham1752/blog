@@ -1,0 +1,82 @@
+---
+/**
+ * tags/index.astro · 标签索引：云 + 每标签文章数
+ */
+import { getCollection } from 'astro:content';
+import SwissLayout from '../../layouts/SwissLayout.astro';
+import TagPill from '../../components/TagPill.astro';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+const tagCount = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+  }
+}
+const tags = [...tagCount.entries()].sort((a, b) => b[1] - a[1]);
+
+const B = import.meta.env.BASE_URL;
+---
+
+<SwissLayout
+  title="标签 · TOYLOG"
+  description="按标签浏览 TOYLOG 全部文章。"
+>
+  <h1 class="page-title">标签</h1>
+  <p class="page-sub">{tags.length} 个标签</p>
+  <div class="cloud">
+    {tags.map(([tag, count]) => (
+      <a class="cloud__item" href={`${B}tags/${tag}/`}>
+        <span class="cloud__name">{tag}</span>
+        <span class="cloud__count">{count}</span>
+      </a>
+    ))}
+  </div>
+</SwissLayout>
+
+<style>
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 800;
+    margin-bottom: var(--space-2);
+  }
+  .page-sub {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--space-6);
+  }
+  .cloud {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-2);
+  }
+  .cloud__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3);
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+  .cloud__item:hover {
+    border-color: var(--card-border-hover);
+    transform: translateY(-2px);
+  }
+  .cloud__name {
+    font-size: var(--fs-body);
+    font-weight: 600;
+  }
+  .cloud__count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>

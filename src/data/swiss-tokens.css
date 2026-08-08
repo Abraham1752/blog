@@ -1,0 +1,162 @@
+/* ============================================================
+   swiss-tokens.css · 皮肤 A：瑞士国际主义（展示层）
+   首页 / 项目 / 归档 / 标签 / 关于
+   对比度核算见《博客UI设计.md》§3（暗色文字级强调 = 柠檬黄，IKB 只作图形/按钮底）
+   ============================================================ */
+
+/* ---------- 亮色 ---------- */
+[data-skin='swiss'] {
+  color-scheme: light;
+
+  /* 颜色 */
+  --bg: #f5f3ee;
+  --fg: #1a1a1a;
+  --muted: #6b6b66;
+  --hairline: rgba(26, 26, 26, 0.18);
+  --grid-dot: rgba(0, 0, 0, 0.05);
+
+  --accent: #2b3feb;          /* IKB */
+  --accent-text: #2b3feb;     /* 可作文字/链接（6.7:1 AAA） */
+  --accent-bg: #2b3feb;       /* 按钮/色块底 */
+  --accent-fg: #ffffff;       /* 白字压 IKB 底（6.9:1 AAA） */
+  --accent-hover-bg: #2233c8;
+
+  --lemon: #f5d90a;           /* 仅背景/图形，禁作文字 */
+  --lemon-fg: #1a1a1a;        /* 黑字压柠檬黄底（14.8:1） */
+  --safety: #ff5c00;
+  --safety-fg: #1a1a1a;
+
+  /* 组件 */
+  --header-bg: rgba(245, 243, 238, 0.82);
+  --header-border: #1a1a1a;
+  --card-bg: #f5f3ee;
+  --card-border: #1a1a1a;
+  --card-border-hover: #2b3feb;
+  --chip-border: rgba(26, 26, 26, 0.5);
+  --chip-fg: #1a1a1a;
+  --tag-border: rgba(26, 26, 26, 0.4);
+  --tag-fg: #1a1a1a;
+  --badge-active-bg: var(--lemon);
+  --badge-active-fg: var(--lemon-fg);
+  --badge-done-bg: var(--accent-bg);
+  --badge-done-fg: var(--accent-fg);
+  --badge-archive-bg: #c9c6bd;
+  --badge-archive-fg: #1a1a1a;
+  --btn-bg: var(--accent-bg);
+  --btn-fg: var(--accent-fg);
+  --btn-hover-bg: var(--accent-hover-bg);
+  --focus-ring: #2b3feb;
+
+  /* 排版：拉丁走 Fonts API webfont，CJK 标题走 Noto Sans SC 700 子集，正文系统字体 */
+  --font-display: var(--fw-archivo-black), var(--fw-cjk-sans), 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-body: var(--fw-space-grotesk), 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --fs-label: 12px;
+  --fs-body: 16px;
+  --fs-h3: 20px;
+  --fs-h2: 28px;
+  --fs-h1: 40px;
+  --fs-hero: clamp(44px, 8vw, 72px);
+  --lh-body: 1.7;
+  --ls-mono: 0.12em;
+
+  /* 间距：4px 基准网格（紧凑） */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 80px;
+
+  /* 直角卡片 + 2px 粗边框 */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-code: 0;
+}
+
+/* ---------- 暗色（显式手动切换） ---------- */
+[data-skin='swiss'][data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #111111;
+  --fg: #ededed;
+  --muted: #a3a3a3;
+  --hairline: rgba(237, 237, 237, 0.16);
+  --grid-dot: rgba(255, 255, 255, 0.06);
+
+  --accent: #5b6bf0;          /* IKB 暗色：仅图形/按钮底（白字 4.3:1 AA） */
+  --accent-text: #e8d113;     /* 文字级强调一律柠檬黄（13.7:1 AAA） */
+  --accent-bg: #5b6bf0;
+  --accent-fg: #ffffff;
+  --accent-hover-bg: #6f7ef5;
+
+  --lemon: #e8d113;
+  --lemon-fg: #111111;
+  --safety: #ff7a2e;
+  --safety-fg: #111111;
+
+  --header-bg: rgba(17, 17, 17, 0.82);
+  --header-border: rgba(237, 237, 237, 0.12);
+  --card-bg: #111111;
+  --card-border: rgba(237, 237, 237, 0.55);
+  --card-border-hover: #e8d113;
+  --chip-border: rgba(237, 237, 237, 0.4);
+  --chip-fg: #ededed;
+  --tag-border: rgba(237, 237, 237, 0.35);
+  --tag-fg: #ededed;
+  --badge-active-bg: var(--lemon);
+  --badge-active-fg: var(--lemon-fg);
+  --badge-done-bg: var(--accent-bg);
+  --badge-done-fg: var(--accent-fg);
+  --badge-archive-bg: #2e2e2e;
+  --badge-archive-fg: #ededed;
+  --btn-bg: var(--accent-bg);
+  --btn-fg: var(--accent-fg);
+  --btn-hover-bg: var(--accent-hover-bg);
+  --focus-ring: #e8d113;
+}
+
+/* ---------- 暗色（无 JS 时跟随系统） ---------- */
+@media (prefers-color-scheme: dark) {
+  :root[data-skin='swiss']:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --bg: #111111;
+    --fg: #ededed;
+    --muted: #a3a3a3;
+    --hairline: rgba(237, 237, 237, 0.16);
+    --grid-dot: rgba(255, 255, 255, 0.06);
+
+    --accent: #5b6bf0;
+    --accent-text: #e8d113;
+    --accent-bg: #5b6bf0;
+    --accent-fg: #ffffff;
+    --accent-hover-bg: #6f7ef5;
+
+    --lemon: #e8d113;
+    --lemon-fg: #111111;
+    --safety: #ff7a2e;
+    --safety-fg: #111111;
+
+    --header-bg: rgba(17, 17, 17, 0.82);
+    --header-border: rgba(237, 237, 237, 0.12);
+    --card-bg: #111111;
+    --card-border: rgba(237, 237, 237, 0.55);
+    --card-border-hover: #e8d113;
+    --chip-border: rgba(237, 237, 237, 0.4);
+    --chip-fg: #ededed;
+    --tag-border: rgba(237, 237, 237, 0.35);
+    --tag-fg: #ededed;
+    --badge-active-bg: var(--lemon);
+    --badge-active-fg: var(--lemon-fg);
+    --badge-done-bg: var(--accent-bg);
+    --badge-done-fg: var(--accent-fg);
+    --badge-archive-bg: #2e2e2e;
+    --badge-archive-fg: #ededed;
+    --btn-bg: var(--accent-bg);
+    --btn-fg: var(--accent-fg);
+    --btn-hover-bg: var(--accent-hover-bg);
+    --focus-ring: #e8d113;
+  }
+}

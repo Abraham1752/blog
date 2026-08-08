@@ -1,0 +1,48 @@
+---
+/**
+ * 404.astro · 未找到（瑞士风）
+ */
+import SwissLayout from '../layouts/SwissLayout.astro';
+
+const B = import.meta.env.BASE_URL;
+---
+
+<SwissLayout title="404 · TOYLOG" description="页面不存在。" noindex>
+  <section class="nf">
+    <p class="nf__code">404</p>
+    <h1 class="nf__title">页面不存在</h1>
+    <p class="nf__desc">这个地址没有内容——也许链接已失效，或文章还没写。</p>
+    <a class="nf__home" href={B}>← 回首页</a>
+  </section>
+</SwissLayout>
+
+<style>
+  .nf {
+    padding: var(--space-7) 0;
+    text-align: center;
+  }
+  .nf__code {
+    font-family: var(--font-display);
+    font-size: clamp(80px, 20vw, 160px);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--lemon);
+    -webkit-text-stroke: 2px var(--fg);
+  }
+  .nf__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: 800;
+    margin: var(--space-3) 0;
+  }
+  .nf__desc {
+    color: var(--muted);
+    margin-bottom: var(--space-4);
+  }
+  .nf__home {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+    color: var(--accent-text);
+  }
+</style>

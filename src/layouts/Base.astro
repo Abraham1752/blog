@@ -1,0 +1,129 @@
+---
+/**
+ * Base.astro · 全局 HTML 外壳
+ * head 首位为防闪烁(FOUC)内联脚本；包含 meta/OG/canonical/RSS autodiscovery/JSON-LD。
+ */
+import '../data/tokens-base.css';
+import '../data/swiss-tokens.css';
+import '../data/ink-tokens.css';
+import '../data/fonts.css';
+import { Font } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  skin: 'swiss' | 'ink';
+  ogImage?: string;
+  jsonLd?: object[];
+  noindex?: boolean;
+  type?: 'website' | 'article';
+}
+
+const {
+  title,
+  description,
+  skin,
+  ogImage = `${import.meta.env.BASE_URL}og-fallback.png`,
+  jsonLd = [],
+  noindex = false,
+  type = 'website',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site!);
+const siteName = 'TOYLOG · AI 小玩具开发日志';
+
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        name: siteName,
+        url: Astro.site?.origin,
+        inLanguage: 'zh-CN',
+      },
+      {
+        '@type': 'Person',
+        name: 'Abraham1752',
+        url: Astro.site?.origin,
+        sameAs: ['https://github.com/Abraham1752'],
+      },
+    ],
+  },
+  ...jsonLd,
+];
+---
+
+<!doctype html>
+<html lang="zh-CN" data-skin={skin}>
+  <head>
+    <script is:inline>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('theme-preference');
+          theme =
+            stored === 'dark' || stored === 'light'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+        } catch (e) {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <Font cssVariable="--fw-archivo-black" preload={skin === 'swiss'} />
+    <Font cssVariable="--fw-space-grotesk" />
+    <Font cssVariable="--fw-playfair-display" preload={skin === 'ink'} />
+    <Font cssVariable="--fw-source-serif-4" />
+    <Font cssVariable="--fw-jetbrains-mono" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="TOYLOG RSS"
+      href={`${Astro.site}${import.meta.env.BASE_URL}rss.xml`}
+    />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="theme-color" content="#F5F3EE" />
+    <meta name="color-scheme" content="light dark" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    <Header activePath={Astro.url.pathname} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  body {
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-position: 0 60px;
+  }
+  /* 阅读层（ink）不需要点阵，纯净纸感 */
+  html[data-skin='ink'] body {
+    background-image: none;
+  }
+</style>

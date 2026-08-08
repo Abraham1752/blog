@@ -1,0 +1,88 @@
+---
+/**
+ * ThemeToggle.astro · 亮暗切换（icon-only + aria-label，Lucide outline）
+ */
+import { toggleTheme, initThemeToggle } from '../data/themes.ts';
+---
+
+<button
+  class="theme-toggle"
+  type="button"
+  data-theme-toggle
+  aria-label="切换主题"
+>
+  <!-- 太阳（暗色时显示）/ 月亮（亮色时显示） -->
+  <svg
+    class="icon icon--sun"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+  </svg>
+  <!-- 月亮 -->
+  <svg
+    class="icon icon--moon"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+</button>
+
+<script>
+  import { toggleTheme, initThemeToggle } from '../data/themes.ts';
+  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+    toggleTheme();
+  });
+  initThemeToggle();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--fg);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .theme-toggle:hover {
+    border-color: var(--chip-border);
+  }
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .icon {
+    grid-area: 1 / 1;
+  }
+  /* 亮色显示月亮（点击切到暗色），暗色显示太阳 */
+  [data-theme='dark'] .icon--sun {
+    display: none;
+  }
+  [data-theme='light'] .icon--moon,
+  :root:not([data-theme]) .icon--moon {
+    display: none;
+  }
+</style>

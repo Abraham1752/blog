@@ -1,0 +1,120 @@
+---
+/**
+ * ProjectCard.astro · Bento 项目卡片：直角 + 2px 边框，hover 抬升 + 边框变强调色
+ * 状态徽章：进行中=柠檬黄底黑字 / 已完成=IKB 底白字 / 归档=灰
+ */
+import TechChip from './TechChip.astro';
+
+interface Project {
+  name: string;
+  slug: string;
+  status: string;
+  started: string;
+  summary: string;
+  tech?: string[];
+  links?: { github?: string };
+}
+
+interface Props {
+  project: Project;
+  large?: boolean;
+}
+
+const { project, large = false } = Astro.props;
+const B = import.meta.env.BASE_URL;
+const statusClass = project.status === '进行中' ? 'active' : project.status === '已完成' ? 'done' : 'archive';
+const github = project.links?.github?.trim();
+---
+
+<article class:list={{ card: true, 'card--large': large }}>
+  <a class="card__link" href={`${B}projects/${project.slug}/`} aria-label={`查看项目 ${project.name}`}>
+    <header class="card__head">
+      <span class="badge" data-status={statusClass}>{project.status}</span>
+      <span class="card__year">{project.started}</span>
+    </header>
+    <h3 class="card__name">{project.name}</h3>
+    <p class="card__summary">{project.summary}</p>
+    <footer class="card__foot">
+      {project.tech?.map((t) => <TechChip label={t} />)}
+    </footer>
+  </a>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius-md);
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: var(--card-border-hover);
+  }
+  .card__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    min-height: 100%;
+  }
+  .card--large .card__link {
+    padding: var(--space-5);
+  }
+  .card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    border-radius: var(--radius-sm);
+  }
+  .badge[data-status='active'] {
+    background: var(--badge-active-bg);
+    color: var(--badge-active-fg);
+  }
+  .badge[data-status='done'] {
+    background: var(--badge-done-bg);
+    color: var(--badge-done-fg);
+  }
+  .badge[data-status='archive'] {
+    background: var(--badge-archive-bg);
+    color: var(--badge-archive-fg);
+  }
+  .card__year {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: var(--ls-mono);
+    color: var(--muted);
+  }
+  .card__name {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    line-height: 1.2;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .card:hover .card__name {
+    color: var(--accent-text);
+  }
+  .card__summary {
+    font-size: var(--fs-body);
+    color: var(--muted);
+    line-height: var(--lh-body);
+  }
+  .card__foot {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding-top: var(--space-3);
+  }
+</style>

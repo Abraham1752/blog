@@ -1,0 +1,269 @@
+---
+/**
+ * InkLayout.astro · 内容层布局（文章页）：暖纸底 + 68ch 正文容器
+ * 含 Prose 正文样式、标签、关联项目、PrevNext 导航
+ */
+import type { CollectionEntry } from 'astro:content';
+import Base from './Base.astro';
+import TagPill from '../components/TagPill.astro';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  jsonLd?: object[];
+}
+
+const { post } = Astro.props;
+const B = import.meta.env.BASE_URL;
+const { data } = post;
+
+const readingTime = Math.max(1, Math.round(data.description.length / 400) + 1);
+
+const date = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(data.pubDate);
+const dateISO = data.pubDate.toISOString();
+
+const title = `${data.title} · TOYLOG`;
+
+const blogPostLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description,
+  datePublished: dateISO,
+  dateModified: (data.updatedDate ?? data.pubDate).toISOString(),
+  inLanguage: 'zh-CN',
+  keywords: data.tags.join(', '),
+  author: { '@type': 'Person', name: 'Abraham1752', url: Astro.site?.origin },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site!).href,
+};
+---
+
+<Base
+  title={title}
+  description={data.description}
+  skin="ink"
+  jsonLd={[blogPostLd]}
+  type="article"
+>
+  <article class="ink-page">
+    <header class="post-head">
+      <p class="post-head__meta">
+        <span class="post-head__cat">{data.category}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={dateISO}>{date}</time>
+        <span aria-hidden="true">·</span>
+        <span>约 {readingTime} 分钟</span>
+      </p>
+      <h1 class="post-head__title">{data.title}</h1>
+      <p class="post-head__desc">{data.description}</p>
+      {data.excerptEn && <p class="post-head__en" lang="en">{data.excerptEn}</p>}
+    </header>
+
+    <div class="prose" data-pagefind-body>
+      <slot />
+    </div>
+
+    <footer class="post-foot">
+      <div class="post-foot__tags">
+        {data.tags.map((tag) => (
+          <TagPill label={tag} href={`${B}tags/${tag}/`} />
+        ))}
+      </div>
+      <p class="post-foot__meta">
+        更新于{' '}
+        <time datetime={(data.updatedDate ?? data.pubDate).toISOString()}>
+          {new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(
+            data.updatedDate ?? data.pubDate,
+          )}
+        </time>
+        · 文章首发于本站，转载请注明出处
+      </p>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .ink-page {
+    max-width: var(--max-prose);
+    margin-inline: auto;
+    padding: var(--space-6) var(--space-3) 0;
+  }
+  .post-head {
+    margin-bottom: var(--space-6);
+  }
+  .post-head__meta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+  }
+  .post-head__cat {
+    color: var(--accent-text);
+    font-weight: 700;
+  }
+  .post-head__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    line-height: var(--lh-heading);
+    margin-bottom: var(--space-3);
+  }
+  .post-head__desc {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--muted);
+  }
+  .post-head__en {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--muted);
+    margin-top: var(--space-2);
+  }
+  .post-foot {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--hairline);
+  }
+  .post-foot__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+  .post-foot__meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: var(--ls-mono);
+    color: var(--muted);
+  }
+</style>
+
+<style is:global>
+  /* ---------- Prose：68ch 正文排版（ink 皮肤） ---------- */
+  .prose {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--fg);
+  }
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: var(--lh-heading);
+    margin-top: var(--space-5);
+    margin-bottom: var(--space-3);
+  }
+  .prose h2 {
+    font-size: var(--fs-h2);
+  }
+  .prose h3 {
+    font-size: var(--fs-h3);
+  }
+  .prose h4 {
+    font-size: 19px;
+  }
+  .prose p {
+    margin-bottom: var(--space-3);
+  }
+  .prose a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .prose a:hover {
+    text-decoration-thickness: 2px;
+  }
+  .prose strong {
+    font-weight: 700;
+  }
+  .prose ul,
+  .prose ol {
+    margin-bottom: var(--space-3);
+    padding-left: 1.5em;
+  }
+  .prose li {
+    margin-bottom: var(--space-1);
+  }
+  .prose li::marker {
+    color: var(--accent-text);
+  }
+  .prose blockquote {
+    border-left: 4px solid var(--quote-border);
+    padding-left: var(--space-3);
+    margin: var(--space-4) 0;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--hairline);
+    margin: var(--space-5) 0;
+  }
+  .prose pre {
+    background: var(--block-bg);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius-code);
+    padding: var(--space-3);
+    overflow-x: auto;
+    margin: var(--space-4) 0;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    background: var(--block-bg);
+    border-radius: 4px;
+    padding: 0.15em 0.4em;
+  }
+  .prose pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+  .prose :not(pre) > code {
+    background: var(--block-bg);
+    color: var(--accent-text);
+  }
+  /* rehype-mermaid 输出：居中 + 边框 + 描述文字 */
+  .prose picture,
+  .prose img[data-mermaid] {
+    display: block;
+    margin: var(--space-4) auto;
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius-code);
+    padding: var(--space-2);
+    background: var(--block-bg);
+  }
+  .prose img {
+    border-radius: var(--radius-md);
+    margin: var(--space-4) 0;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-4) 0;
+    font-size: 0.95em;
+  }
+  .prose th,
+  .prose td {
+    border: 1px solid var(--hairline);
+    padding: var(--space-2);
+    text-align: left;
+  }
+  .prose th {
+    background: var(--block-bg);
+    font-weight: 700;
+  }
+  /* 暗色下 Shiki 双主题由 html[data-theme] 控制 */
+</style>

@@ -1,0 +1,38 @@
+---
+/**
+ * SwissLayout.astro · 展示层布局（首页/项目/归档/标签/关于）
+ * 网格点阵背景 + 页面容器
+ */
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  jsonLd?: object[];
+  noindex?: boolean;
+}
+
+const props = Astro.props;
+---
+
+<Base
+  title={props.title}
+  description={props.description}
+  skin="swiss"
+  ogImage={props.ogImage}
+  jsonLd={props.jsonLd}
+  noindex={props.noindex}
+>
+  <div class="swiss-page">
+    <slot />
+  </div>
+</Base>
+
+<style>
+  .swiss-page {
+    max-width: var(--max-page);
+    margin-inline: auto;
+    padding: var(--space-6) var(--space-3) 0;
+  }
+</style>

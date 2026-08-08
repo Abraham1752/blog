@@ -1,0 +1,153 @@
+---
+/**
+ * about.astro · 关于页：大字自我介绍 + 引言块 + 常用工具 + 联系方式
+ */
+import { getProjects } from '../lib/projects';
+import SwissLayout from '../layouts/SwissLayout.astro';
+import TechChip from '../components/TechChip.astro';
+
+const projects = await getProjects();
+const projectCount = projects.length;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: '关于 · TOYLOG',
+    inLanguage: 'zh-CN',
+  },
+];
+
+const tools = ['Python', 'Astro', 'Git', 'Claude', 'VS Code', 'mitmproxy'];
+---
+
+<SwissLayout
+  title="关于 · TOYLOG"
+  description="关于 Abraham1752：在做什么、常用工具、如何联系。"
+  jsonLd={jsonLd}
+>
+  <section class="hero">
+    <h1 class="hero__title">
+      你好，我是 <span class="hero__hl">Abraham1752</span>
+    </h1>
+    <p class="hero__sub">写代码 · 造玩具 · 记日志</p>
+  </section>
+
+  <section class="prose">
+    <blockquote>
+      <p>
+        这个站点的初衷很简单：把我用 AI 开发小玩具、小项目的完整历程记录下来——
+        遇到的问题、用过的工具、得到的教训。写给别人看，更是写给未来的自己。
+      </p>
+    </blockquote>
+    <p>
+      我在业余时间用 <strong>Python</strong> 写了不少小工具：抓包分析网络协议、
+      做自动化研究流水线、折腾各种 UI 视觉实验。目前维护 <strong>{projectCount} 个项目</strong>，
+      全部记录在<a href="/projects/">项目专区</a>。
+    </p>
+    <p>
+      本站使用 <strong>Astro</strong> 静态构建，采用瑞士国际主义 × 电子墨水双皮肤设计——
+      展示层硬朗理性，阅读层温暖舒展。没有评论、没有统计，写作即 git push。
+    </p>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">常用工具</h2>
+    <div class="chips">
+      {tools.map((t) => (
+        <TechChip label={t} />
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">联系方式</h2>
+    <ul class="links">
+      <li>
+        GitHub：
+        <a href="https://github.com/Abraham1752" target="_blank" rel="noopener">@Abraham1752</a>
+      </li>
+      <li>
+        本站仓库：
+        <a href="https://github.com/Abraham1752/blog" target="_blank" rel="noopener">Abraham1752/blog</a>
+      </li>
+    </ul>
+  </section>
+</SwissLayout>
+
+<style>
+  .hero {
+    padding: var(--space-4) 0 var(--space-5);
+    border-bottom: 2px solid var(--fg);
+    margin-bottom: var(--space-6);
+  }
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: var(--space-3);
+  }
+  .hero__hl {
+    background: var(--lemon);
+    color: var(--lemon-fg);
+    padding: 0 0.15em;
+  }
+  .hero__sub {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .prose {
+    max-width: var(--max-prose);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    margin-bottom: var(--space-6);
+  }
+  .prose p {
+    margin-bottom: var(--space-3);
+  }
+  .prose a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose blockquote {
+    border-left: 4px solid var(--accent);
+    padding-left: var(--space-3);
+    margin-bottom: var(--space-4);
+    color: var(--muted);
+    font-style: italic;
+  }
+  .section {
+    margin-bottom: var(--space-6);
+  }
+  .section__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: 800;
+    margin-bottom: var(--space-3);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  .links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.04em;
+  }
+  .links a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

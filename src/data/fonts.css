@@ -1,0 +1,28 @@
+/* ============================================================
+   fonts.css · CJK 标题字体（自托管子集）
+   由 scripts/subset-cjk.ps1 从 google/fonts 可变字体生成：
+   - noto-serif-sc-700.woff2  ink 皮肤中文标题
+   - noto-sans-sc-700.woff2   swiss 皮肤中文标题
+   仅覆盖 scripts/fonts-src/charset.txt 收录字符；新增内容后重跑子集化。
+   font-display: swap → 缺失字形回退系统字体，不阻塞渲染。
+   ============================================================ */
+
+@font-face {
+  font-family: 'Noto Serif SC';
+  src: url('../assets/fonts/noto-serif-sc-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans SC';
+  src: url('../assets/fonts/noto-sans-sc-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* 供皮肤文件追加进展示字体的 CJK 段（位于拉丁 webfont 之后、系统字体之前） */
+  --fw-cjk-serif: 'Noto Serif SC';
+  --fw-cjk-sans: 'Noto Sans SC';
+}

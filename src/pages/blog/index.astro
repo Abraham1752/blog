@@ -1,0 +1,120 @@
+---
+/**
+ * blog/index.astro · 文章归档（分页 10 篇/页，第 2 页起 noindex）
+ */
+import { getCollection } from 'astro:content';
+import SwissLayout from '../../layouts/SwissLayout.astro';
+import ArticleListItem from '../../components/ArticleListItem.astro';
+
+const PER_PAGE = 10;
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort((a, b) =>
+  b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+export async function getStaticPaths() {
+  const totalPages = Math.max(1, Math.ceil(allPosts.length / PER_PAGE));
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: i === 0 ? undefined : String(i + 1) },
+    props: { page: i + 1, totalPages },
+  }));
+}
+
+const { page, totalPages } = Astro.props as { page: number; totalPages: number };
+const start = (page - 1) * PER_PAGE;
+const pagePosts = allPosts.slice(start, start + PER_PAGE);
+
+// 按年份分组（当前页内）
+const byYear = new Map<number, typeof pagePosts>();
+for (const post of pagePosts) {
+  const year = post.data.pubDate.getFullYear();
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(post);
+}
+
+const B = import.meta.env.BASE_URL;
+const isFirst = page === 1;
+---
+
+<SwissLayout
+  title={isFirst ? '归档 · TOYLOG' : `归档 · 第 ${page} 页 · TOYLOG`}
+  description="TOYLOG 全部文章归档：项目复盘、教程、工具测评与周记。"
+  noindex={!isFirst}
+>
+  <h1 class="page-title">归档</h1>
+  <p class="page-sub">
+    <span>{allPosts.length} 篇文章</span>
+    <span aria-hidden="true">·</span>
+    <span>第 {page} / {totalPages} 页</span>
+  </p>
+
+  {[...byYear.entries()].map(([year, posts]) => (
+    <section class="year">
+      <h2 class="year__label">{year}</h2>
+      <div class="year__list">
+        {posts.map((post, i) => (
+          <ArticleListItem post={post} index={start + i} />
+        ))}
+      </div>
+    </section>
+  ))}
+
+  {totalPages > 1 && (
+    <nav class="pager" aria-label="归档分页">
+      {page > 1 ? (
+        <a href={page === 2 ? `${B}blog/` : `${B}blog/${page - 1}/`}>← 上一页</a>
+      ) : (
+        <span aria-hidden="true"></span>
+      )}
+      {page < totalPages ? (
+        <a href={`${B}blog/${page + 1}/`}>下一页 →</a>
+      ) : (
+        <span aria-hidden="true"></span>
+      )}
+    </nav>
+  )}
+</SwissLayout>
+
+<style>
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 800;
+    margin-bottom: var(--space-2);
+  }
+  .page-sub {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+  .year {
+    margin-bottom: var(--space-6);
+  }
+  .year__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    letter-spacing: var(--ls-mono);
+    color: var(--accent-text);
+    margin-bottom: var(--space-2);
+  }
+  .year__list {
+    border-top: 2px solid var(--fg);
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-mono);
+  }
+  .pager a:hover {
+    color: var(--accent-text);
+  }
+</style>

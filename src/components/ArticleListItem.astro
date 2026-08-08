@@ -1,0 +1,70 @@
+---
+/**
+ * ArticleListItem.astro · editorial register 归档项：mono 序号 + 标题 + mono 日期
+ */
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  index: number;
+}
+
+const { post, index } = Astro.props;
+const B = import.meta.env.BASE_URL;
+const date = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(
+  post.data.pubDate,
+);
+const num = String(index + 1).padStart(2, '0');
+---
+
+<a class="item" href={`${B}blog/${post.id}/`}>
+  <span class="item__num" aria-hidden="true">{num}</span>
+  <span class="item__title">{post.data.title}</span>
+  <span class="item__cat">{post.data.category}</span>
+  <time class="item__date" datetime={post.data.pubDate.toISOString()}>{date}</time>
+</a>
+
+<style>
+  .item {
+    display: grid;
+    grid-template-columns: 48px 1fr auto auto;
+    gap: var(--space-3);
+    align-items: baseline;
+    padding-block: var(--space-2);
+    border-bottom: 1px solid var(--hairline);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .item:last-child {
+    border-bottom: 0;
+  }
+  .item:hover {
+    border-color: var(--accent);
+  }
+  .item__num,
+  .item__cat,
+  .item__date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .item__title {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .item:hover .item__title {
+    color: var(--accent-text);
+  }
+  @media (max-width: 640px) {
+    .item {
+      grid-template-columns: 36px 1fr auto;
+    }
+    .item__cat {
+      display: none;
+    }
+  }
+</style>

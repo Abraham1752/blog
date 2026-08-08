@@ -1,0 +1,34 @@
+---
+/**
+ * blog/[slug].astro · 文章页（ink 皮肤）
+ */
+import { getCollection, render } from 'astro:content';
+import InkLayout from '../../layouts/InkLayout.astro';
+import PrevNext from '../../components/PrevNext.astro';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort((a, b) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, prev: posts[i - 1] ?? null, next: posts[i + 1] ?? null },
+  }));
+}
+
+const { post, prev, next } = Astro.props as {
+  post: Awaited<ReturnType<typeof getCollection<'posts'>>>[number];
+  prev: (typeof post) | null;
+  next: (typeof post) | null;
+};
+
+const { Content } = await render(post);
+---
+
+<InkLayout post={post}>
+  <Content />
+  <PrevNext
+    prev={prev ? { slug: prev.id, title: prev.data.title } : undefined}
+    next={next ? { slug: next.id, title: next.data.title } : undefined}
+  />
+</InkLayout>

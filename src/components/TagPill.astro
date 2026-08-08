@@ -1,0 +1,36 @@
+---
+/**
+ * TagPill.astro · 标签胶囊（1px 边框小圆角，层次区分于 chip）
+ */
+interface Props {
+  label: string;
+  href?: string;
+}
+const { label, href } = Astro.props;
+---
+
+{
+  href ? (
+    <a class="pill" href={href}>{label}</a>
+  ) : (
+    <span class="pill">{label}</span>
+  )
+}
+
+<style>
+  .pill {
+    display: inline-block;
+    padding: 3px 12px;
+    font-size: 13px;
+    color: var(--tag-fg);
+    border: 1px solid var(--tag-border);
+    border-radius: 999px;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  a.pill:hover {
+    color: var(--accent-text);
+    border-color: var(--accent-text);
+  }
+</style>

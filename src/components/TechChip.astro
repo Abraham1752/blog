@@ -1,0 +1,27 @@
+---
+/**
+ * TechChip.astro · mono 12px 大写 1px 边框技术栈徽章
+ */
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<span class="chip">{label}</span>
+
+<style>
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--chip-fg);
+    border: 1px solid var(--chip-border);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+</style>

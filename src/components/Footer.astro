@@ -1,0 +1,48 @@
+---
+/**
+ * Footer.astro · mono 12px：RSS · GitHub · 声明 · 年份
+ */
+const B = import.meta.env.BASE_URL;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__inner">
+    <p class="footer__item">
+      <a href={`${B}rss.xml`} target="_blank" rel="noopener">RSS</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://github.com/Abraham1752/blog" target="_blank" rel="noopener">GitHub</a>
+    </p>
+    <p class="footer__item">
+      © {year} TOYLOG · 内容仅供学习研究，转载注明出处
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--space-7);
+    border-top: 1px solid var(--hairline);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .footer__inner {
+    max-width: var(--max-page);
+    margin-inline: auto;
+    padding: var(--space-4) var(--space-3) var(--space-5);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .footer__item {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .footer a:hover {
+    color: var(--accent-text);
+  }
+</style>
