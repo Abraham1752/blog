@@ -9,6 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "preflight": "node scripts/preflight.mjs",
+    "verify": "node scripts/verify-ui.mjs",
+    "charset": "node scripts/build-charset.mjs && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/subset-cjk.ps1",
     "astro": "astro"
   },
   "dependencies": {
